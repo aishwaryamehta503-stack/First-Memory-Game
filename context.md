@@ -15,14 +15,17 @@ It counts moves, tracks elapsed time, and awards a three-star rating based on th
 
 ## How it is built
 
-The game is implemented in `memory-game.html` as a single standalone file containing the page markup, responsive CSS, and JavaScript game logic. It has no external libraries, build step, or backend. Cards are shuffled with the Fisher–Yates algorithm. The interface supports mouse and keyboard play, uses ARIA roles and state attributes, and adapts to smaller screens.
+The game is implemented in `Week-01/Memory-Game/memory-game.html` as a single standalone file containing the page markup, responsive CSS, and JavaScript game logic. Its dark-theme requirements are documented in `Week-01/Memory-Game/PRD_dark_theme.md`. It has no external libraries, build step, or backend. Cards are shuffled with the Fisher–Yates algorithm. The interface supports mouse and keyboard play, uses ARIA roles and state attributes, and adapts to smaller screens.
 
 ## How to run
 
-Open `memory-game.html` in a modern web browser. Alternatively, serve the repository with a local HTTP server and open `/memory-game.html`. Scores are stored in that browser's local storage and are not shared between browsers or devices.
+Open `Week-01/Memory-Game/memory-game.html` in a modern web browser. Alternatively, serve the repository with a local HTTP server and open `/Week-01/Memory-Game/memory-game.html`. Scores are stored in that browser's local storage and are not shared between browsers or devices.
 
 ## Repository contents
 
-- `memory-game.html` — the complete game
-- `README.md` — quick-start instructions and feature overview
+- `Week-01/Memory-Game/memory-game.html` — the complete Memory Game
+- `Week-01/Memory-Game/PRD_dark_theme.md` — dark-theme requirements
+- `Week-01/Snake-Game/snake-game.html` — the complete Snake game
+- `Week-01/Snake-Game/PRD_snake_game.md` — Snake requirements
+- `README.md` — project overview and game links
 - `context.md` — this project context
