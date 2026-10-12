@@ -1,40 +1,47 @@
-# Memory Game
+# Classic Browser Games
 
-A responsive and accessible Memory (Concentration) card game built with HTML, CSS, and JavaScript.
+A small collection of classic games that run directly in a modern web browser. Each game is a self-contained HTML file with its own styling and JavaScript. There are no external dependencies, build steps, servers, or accounts required.
 
-## Features
+## Games
 
-- 4x4 and 6x6 grid options
-- Smooth card flip animations
-- Timer and moves counter
-- Star rating system
-- Local storage for best scores
-- Keyboard controls for accessibility
-- Responsive design for all devices
-- No external dependencies
+### Memory Game
 
-## How to Play
+Open [`memory-game.html`](./memory-game.html) to play Concentration: reveal cards and find matching emoji pairs.
 
-1. Open `memory-game.html` in a web browser
-2. Click or use keyboard (Tab + Enter/Space) to flip cards
-3. Find matching pairs to win
-4. Try to complete the game with as few moves as possible
-5. Switch between 4x4 and 6x6 grids using the buttons
+- Choose a 4×4 or 6×6 board.
+- Track moves, elapsed time, and a star rating.
+- Save best scores in the browser's local storage.
+- Switch between light and dark themes; the theme choice is saved in local storage.
+- Use a mouse, touch, or keyboard to play.
 
-## Technical Details
+Requirements: [`PRD_dark_theme.md`](./PRD_dark_theme.md)
 
-- Pure HTML, CSS, and JavaScript implementation
-- No external libraries or dependencies
-- Fully responsive design using CSS Grid
-- Accessible with ARIA attributes and keyboard controls
-- Local storage for persistent high scores
+### Tic-Tac-Toe
 
-## Development
+Open [`tic-tac-toe.html`](./tic-tac-toe.html) for a 3×3 game of noughts and crosses.
 
-1. Clone the repository
-2. Open `memory-game.html` in a web browser
-3. Or serve using a local HTTP server:
-   ```bash
-   python3 -m http.server 8000
-   ```
-4. Visit `http://localhost:8000/memory-game.html`
+- Play pass-and-play with two people or against the computer.
+- X starts; the computer can take an immediate win or block an immediate threat.
+- See turn and end-of-round messages, with separate X, O, and draw tallies.
+- Start a new round without clearing the current mode's scores, or reset scores.
+- Use a mouse, touch, or keyboard to play.
+- Scores last for the current page session.
+
+Requirements: [`PRD_tic_tac_toe.md`](./PRD_tic_tac_toe.md)
+
+## Play
+
+Open either HTML file directly in a browser. To serve the files locally instead:
+
+```bash
+python3 -m http.server 8000
+```
+
+Then visit:
+
+- `http://localhost:8000/memory-game.html`
+- `http://localhost:8000/tic-tac-toe.html`
+
+## Project context
+
+See [`context.md`](./context.md) for background on the original Memory Game.

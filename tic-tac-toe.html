@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f3f6fb">
+    <title>Tic-Tac-Toe</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --page: #f3f6fb;
+            --surface: #ffffff;
+            --text: #1c2940;
+            --muted: #61708a;
+            --accent: #3157d5;
+            --accent-hover: #2444b3;
+            --line: #dce3ef;
+            --cell: #f9fbff;
+            --mark-x: #3157d5;
+            --mark-o: #d04c73;
+            --focus: #f0a52b;
+            --shadow: 0 12px 36px rgba(24, 43, 82, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 32px 16px;
+            display: grid;
+            place-items: center;
+            background: var(--page);
+            color: var(--text);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            line-height: 1.5;
+        }
+
+        button,
+        select {
+            font: inherit;
+        }
+
+        .app {
+            width: min(100%, 540px);
+            padding: clamp(20px, 5vw, 36px);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background: var(--surface);
+            box-shadow: var(--shadow);
+        }
+
+        header {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .eyebrow {
+            margin: 0 0 6px;
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2rem, 8vw, 3rem);
+            letter-spacing: -0.05em;
+            line-height: 1.1;
+        }
+
+        .intro {
+            margin: 10px 0 0;
+            color: var(--muted);
+        }
+
+        .settings {
+            margin-bottom: 20px;
+        }
+
+        .settings label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        select {
+            width: 100%;
+            min-height: 46px;
+            padding: 9px 38px 9px 12px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .status {
+            min-height: 32px;
+            margin: 0 0 14px;
+            color: var(--muted);
+            font-size: 1.05rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            width: 100%;
+            max-width: 390px;
+            margin: 0 auto;
+            aspect-ratio: 1;
+        }
+
+        .square {
+            display: grid;
+            min-width: 0;
+            place-items: center;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--cell);
+            color: var(--text);
+            cursor: pointer;
+            font-size: clamp(2.7rem, 15vw, 5.25rem);
+            font-weight: 800;
+            line-height: 1;
+            transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease;
+        }
+
+        .square:not(:disabled):hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+        }
+
+        .square:disabled {
+            cursor: default;
+        }
+
+        .square.mark-x {
+            color: var(--mark-x);
+        }
+
+        .square.mark-o {
+            color: var(--mark-o);
+        }
+
+        button:focus-visible,
+        select:focus-visible {
+            outline: 3px solid var(--focus);
+            outline-offset: 3px;
+        }
+
+        .scores {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 22px 0;
+        }
+
+        .score {
+            padding: 10px 6px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: var(--surface);
+            text-align: center;
+        }
+
+        .score-label {
+            display: block;
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .score-value {
+            display: block;
+            margin-top: 2px;
+            font-size: 1.35rem;
+            font-weight: 800;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .action-button {
+            min-height: 44px;
+            padding: 9px 15px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: var(--surface);
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .action-button.primary {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: #ffffff;
+        }
+
+        .action-button.primary:hover {
+            border-color: var(--accent-hover);
+            background: var(--accent-hover);
+        }
+
+        .action-button:not(.primary):hover {
+            border-color: var(--accent);
+        }
+
+        .hint {
+            margin: 18px 0 0;
+            color: var(--muted);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        @media (max-width: 420px) {
+            body {
+                padding: 16px 10px;
+            }
+
+            .app {
+                border-radius: 18px;
+            }
+
+            .board {
+                gap: 7px;
+            }
+
+            .square {
+                border-radius: 12px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <header>
+            <p class="eyebrow">A classic for two</p>
+            <h1>Tic-Tac-Toe</h1>
+            <p class="intro">Get three in a row to win.</p>
+        </header>
+
+        <section class="settings" aria-label="Game settings">
+            <label for="mode">Play mode</label>
+            <select id="mode">
+                <option value="two-player">Two players</option>
+                <option value="computer">Play against computer</option>
+            </select>
+        </section>
+
+        <p class="status" id="status" role="status" aria-live="polite">X's turn</p>
+
+        <div class="board" id="board" role="group" aria-label="Tic-Tac-Toe board"></div>
+
+        <section class="scores" aria-label="Score for this mode">
+            <div class="score">
+                <span class="score-label" id="x-label">X wins</span>
+                <span class="score-value" id="x-score">0</span>
+            </div>
+            <div class="score">
+                <span class="score-label">Draws</span>
+                <span class="score-value" id="draw-score">0</span>
+            </div>
+            <div class="score">
+                <span class="score-label" id="o-label">O wins</span>
+                <span class="score-value" id="o-score">0</span>
+            </div>
+        </section>
+
+        <div class="actions">
+            <button class="action-button primary" id="new-round" type="button">New round</button>
+            <button class="action-button" id="reset-scores" type="button">Reset scores</button>
+        </div>
+
+        <p class="hint">Choose a square with your mouse, touch, or keyboard.</p>
+    </main>
+
+    <script>
+        const winningLines = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
+        ];
+        const boardElement = document.querySelector('#board');
+        const statusElement = document.querySelector('#status');
+        const modeElement = document.querySelector('#mode');
+        const xLabel = document.querySelector('#x-label');
+        const oLabel = document.querySelector('#o-label');
+        const xScoreElement = document.querySelector('#x-score');
+        const oScoreElement = document.querySelector('#o-score');
+        const drawScoreElement = document.querySelector('#draw-score');
+
+        let board = Array(9).fill('');
+        let currentPlayer = 'X';
+        let roundOver = false;
+        let computerTurn = false;
+        let computerTimer = null;
+        let scores = { X: 0, O: 0, draws: 0 };
+
+        function findWinner(cells) {
+            for (const [first, second, third] of winningLines) {
+                if (cells[first] && cells[first] === cells[second] && cells[first] === cells[third]) {
+                    return cells[first];
+                }
+            }
+            return null;
+        }
+
+        function getRoundOutcome(cells) {
+            const winner = findWinner(cells);
+            if (winner) return { winner };
+            if (cells.every(Boolean)) return { draw: true };
+            return null;
+        }
+
+        function renderBoard() {
+            boardElement.replaceChildren();
+            board.forEach((mark, index) => {
+                const square = document.createElement('button');
+                const row = Math.floor(index / 3) + 1;
+                const column = (index % 3) + 1;
+                square.type = 'button';
+                square.className = `square${mark ? ` mark-${mark.toLowerCase()}` : ''}`;
+                square.textContent = mark;
+                square.setAttribute(
+                    'aria-label',
+                    `Row ${row}, column ${column}, ${mark ? mark : 'empty'}`
+                );
+                square.disabled = Boolean(mark) || roundOver || computerTurn;
+                square.addEventListener('click', () => playMove(index));
+                boardElement.appendChild(square);
+            });
+        }
+
+        function renderScores() {
+            xScoreElement.textContent = scores.X;
+            oScoreElement.textContent = scores.O;
+            drawScoreElement.textContent = scores.draws;
+        }
+
+        function updateScoreLabels() {
+            const vsComputer = modeElement.value === 'computer';
+            xLabel.textContent = vsComputer ? 'You (X)' : 'X wins';
+            oLabel.textContent = vsComputer ? 'Computer (O)' : 'O wins';
+        }
+
+        function finishRound(outcome) {
+            roundOver = true;
+            if (outcome.winner) {
+                scores[outcome.winner]++;
+                statusElement.textContent = modeElement.value === 'computer'
+                    ? (outcome.winner === 'X' ? 'You win!' : 'Computer wins!')
+                    : `${outcome.winner} wins!`;
+            } else {
+                scores.draws++;
+                statusElement.textContent = "It's a draw!";
+            }
+            renderBoard();
+            renderScores();
+        }
+
+        function playMove(index) {
+            if (roundOver || computerTurn || board[index]) return;
+
+            board[index] = currentPlayer;
+            const outcome = getRoundOutcome(board);
+            if (outcome) {
+                finishRound(outcome);
+                return;
+            }
+
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            if (modeElement.value === 'computer' && currentPlayer === 'O') {
+                computerTurn = true;
+                statusElement.textContent = 'Computer is thinking…';
+                renderBoard();
+                computerTimer = setTimeout(playComputerMove, 300);
+                return;
+            }
+
+            statusElement.textContent = `${currentPlayer}'s turn`;
+            renderBoard();
+        }
+
+        function findTacticalMove(mark) {
+            for (let index = 0; index < board.length; index++) {
+                if (board[index]) continue;
+                const candidate = board.slice();
+                candidate[index] = mark;
+                if (findWinner(candidate) === mark) return index;
+            }
+            return -1;
+        }
+
+        function playComputerMove() {
+            computerTimer = null;
+            if (roundOver || !computerTurn) return;
+
+            let move = findTacticalMove('O');
+            if (move === -1) move = findTacticalMove('X');
+            if (move === -1 && !board[4]) move = 4;
+            if (move === -1) {
+                const corners = [0, 2, 6, 8].filter(index => !board[index]);
+                const choices = corners.length ? corners : board
+                    .map((mark, index) => mark ? -1 : index)
+                    .filter(index => index !== -1);
+                move = choices[Math.floor(Math.random() * choices.length)];
+            }
+
+            computerTurn = false;
+            board[move] = 'O';
+            const outcome = getRoundOutcome(board);
+            if (outcome) {
+                finishRound(outcome);
+                return;
+            }
+
+            currentPlayer = 'X';
+            statusElement.textContent = "Your turn (X)";
+            renderBoard();
+        }
+
+        function startNewRound() {
+            clearTimeout(computerTimer);
+            computerTimer = null;
+            board = Array(9).fill('');
+            currentPlayer = 'X';
+            roundOver = false;
+            computerTurn = false;
+            statusElement.textContent = modeElement.value === 'computer' ? "Your turn (X)" : "X's turn";
+            renderBoard();
+        }
+
+        modeElement.addEventListener('change', () => {
+            scores = { X: 0, O: 0, draws: 0 };
+            updateScoreLabels();
+            renderScores();
+            startNewRound();
+        });
+
+        document.querySelector('#new-round').addEventListener('click', startNewRound);
+        document.querySelector('#reset-scores').addEventListener('click', () => {
+            scores = { X: 0, O: 0, draws: 0 };
+            renderScores();
+            startNewRound();
+        });
+
+        updateScoreLabels();
+        renderScores();
+        startNewRound();
+    </script>
+</body>
+</html>
